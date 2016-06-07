@@ -4,13 +4,6 @@ module Remotty::BaseApplicationController
   included do
     before_action :authenticate_user!
     before_action :configure_permitted_parameters, if: :devise_controller?
-
-    # To resolve the following error: ActionController::UnknownFormat
-    include ActionController::StrongParameters
-
-    # To resolve the following error: undefined method `default_render'
-    # https://github.com/rails-api/rails-api/issues/93
-    include ActionController::ImplicitRender
   end
 
   protected

@@ -34,6 +34,8 @@ module Remotty::Rails
       ActiveSupport.on_load(:action_controller) do
         # wrap parameters
         include ActionController::ParamsWrapper
+        include ActionController::Cookies
+
         respond_to :html, :json
         wrap_parameters format: [:json] if respond_to?(:wrap_parameters)
 
@@ -68,11 +70,6 @@ module Remotty::Rails
 
       # Log filter
       ::Rails.application.config.filter_parameters += [:password, :password_confirmation, :credit_card]
-    
-      # session for oauth/devise (no cookie)
-      ::Rails.application.config.middleware.use ActionDispatch::Flash
-      ::Rails.application.config.middleware.use ActionDispatch::Cookies
-      ::Rails.application.config.api_only = false
     end
 
   end
