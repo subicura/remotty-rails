@@ -33,16 +33,14 @@ class Remotty::Users::SessionsController < Devise::SessionsController
   def destroy
     user = current_user
 
-    signed_out = (Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name))
-    if signed_out
+    super do
       if user && request.headers["X-Auth-Token"].present?
         auth_token = user.auth_tokens.where(token: Digest::SHA512.hexdigest(request.headers["X-Auth-Token"])).first
         auth_token.destroy if auth_token
       end
+      
+      yield resource if block_given?
     end
-    yield resource if block_given?
-
-    render nothing: true, status: :no_content
   end
 
   # GET /resource
