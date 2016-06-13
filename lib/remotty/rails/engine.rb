@@ -43,9 +43,16 @@ module Remotty::Rails
         include CanCan::ControllerAdditions
         # authority 403 forbidden
         rescue_from CanCan::AccessDenied do |exception|
-          render_error 'FORBIDDEN',
+          respond_to do |format|
+            format.html do
+              render :forbidden, :status => 403, :layout => false
+            end
+            format.any(:xml, :json) do
+              render_error 'FORBIDDEN',
                        exception.message,
                        :forbidden
+            end
+          end
         end
       end
 
